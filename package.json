@@ -1,0 +1,26 @@
+{
+  "name": "reactiontimegame",
+  "version": "1.0.0",
+  "description": "Socket.io based reaction time game.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KentoKana/reactionTimeGame.git"
+  },
+  "author": "Kento",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KentoKana/reactionTimeGame/issues"
+  },
+  "homepage": "https://github.com/KentoKana/reactionTimeGame#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
