@@ -20,7 +20,6 @@ function Game(min, max) {
 
 	this.startTime = function () {
 		this.timeArr.push (Date.now());
-		console.log(this.timeArr);
 	};
 
 	this.stopTime = function () {
@@ -66,12 +65,13 @@ startBtn.addEventListener('click', function () {
 });
 
 socket.on('startGame', function (data) {
-	console.log(data);
 	playerListDisp.innerHTML = players;
-	messageDiv.innerHTML = `Wait ${data} seconds.`;
+	// messageDiv.innerHTML = `Wait ${data} seconds.`;
 	game.setTimeout = setTimeout( ()=> game.promptReaction(), data * 1000);
 	startBtn.setAttribute('disabled', '');
 	reactBtn.removeAttribute('disabled');
+	resultsDisp.innerHTML = '';
+
 });
 
 reactBtn.addEventListener('click', function () {
@@ -82,7 +82,6 @@ reactBtn.addEventListener('click', function () {
 	startBtn.removeAttribute('disabled');
 	reactBtn.setAttribute('disabled', '');
 
-	console.log(calcTime);
 	game.timeArr = [];
 });
 
@@ -90,7 +89,6 @@ socket.on('reactionSent', function (data) {
 	for (var item in data) {
 		const playerHTMLTag = document.getElementById(item);
 		playerHTMLTag.innerHTML += `: ${data[item]}`;
-		console.log(`${item}: ${data[item]}`);
 	}
 });
 
