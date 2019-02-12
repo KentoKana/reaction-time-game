@@ -3,6 +3,8 @@ const messageDiv = document.getElementById('msg');
 const startBtn = document.getElementById('startButton');
 const reactBtn = document.getElementById('reactButton');
 const playerListDisp = document.getElementById('playerList');
+const resultsDisp = document.getElementById('displayResults');
+let players;
 
 function Game(min, max) {
 	this.min = min;
@@ -35,19 +37,28 @@ function Game(min, max) {
 	};
 }
 
+function removeElement(elementId) {
+    // Removes an element from the document.
+    var element = document.getElementById(elementId);
+    element.parentNode.removeChild(element);
+}
+
 const game = new Game(3, 5);
 
 socket.on('connect', function () {
 	var player = prompt('Please type in your display name');
+	console.log(player);
 	socket.emit('playerRegistered', player);
 });
 
+socket.on('disconnect', function (data) {
+	console.log(data);
+	removeElement(data.toString());
+});
+
 socket.on('playerRegistered', function (data) {
-	var list = "";
-	for (var key in data) {
-		list += `<li id="${key}">${data[key]}</li>`;
-	}
-	playerListDisp.innerHTML = list;
+	players = data;
+	playerListDisp.innerHTML = players;
 });
 
 startBtn.addEventListener('click', function () {
@@ -56,6 +67,7 @@ startBtn.addEventListener('click', function () {
 
 socket.on('startGame', function (data) {
 	console.log(data);
+	playerListDisp.innerHTML = players;
 	messageDiv.innerHTML = `Wait ${data} seconds.`;
 	game.setTimeout = setTimeout( ()=> game.promptReaction(), data * 1000);
 	startBtn.setAttribute('disabled', '');
@@ -76,8 +88,16 @@ reactBtn.addEventListener('click', function () {
 
 socket.on('reactionSent', function (data) {
 	for (var item in data) {
-		const playerOnList = document.getElementById(item);
-		playerOnList.innerHTML += `: ${data[item]}`;
+		const playerHTMLTag = document.getElementById(item);
+		playerHTMLTag.innerHTML += `: ${data[item]}`;
 		console.log(`${item}: ${data[item]}`);
 	}
 });
+
+socket.on('determineWinner', function (data) {
+	let string = '';
+	for (i=0;i<data.length;i++) {
+		string += `${i+1}. 	${document.getElementById(data[i]).innerHTML.split(':')[0]}<br>`;
+	}
+	resultsDisp.innerHTML = string;
+})
